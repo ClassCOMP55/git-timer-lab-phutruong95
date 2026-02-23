@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import javax.swing.Timer;
 
 import acm.graphics.GLabel;
+import acm.graphics.GObject;
 import acm.graphics.GOval;
 import acm.graphics.GRect;
 import acm.program.GraphicsProgram;
@@ -57,6 +58,7 @@ public class DodgeBall extends GraphicsProgram implements ActionListener {
 		}
 
 		moveAllEnemiesOnce();
+		checkCollisions();
 	}
 
 	public void mousePressed(MouseEvent e) {
@@ -104,6 +106,21 @@ public class DodgeBall extends GraphicsProgram implements ActionListener {
 	private void moveAllEnemiesOnce() {
 		for (GRect enemy : enemies) {
 			enemy.move(0, rgen.nextInt(-2, 2));
+		}
+	}
+
+	private void checkCollisions() {
+		for (GOval ball : balls) {
+			double checkX = ball.getX() + SIZE + 1;
+			double checkY = ball.getY() + SIZE / 2.0;
+
+			GObject hit = getElementAt(checkX, checkY);
+			if (hit instanceof GRect) {
+				GRect enemy = (GRect) hit;
+				remove(enemy);
+				enemies.remove(enemy);
+				text.setLabel("" + enemies.size());
+			}
 		}
 	}
 
